@@ -1,10 +1,10 @@
 Pydew-Valley
 ================
 
-Implementação de uma versão simplificada do jogo [Stardew Valley](https://www.stardewvalley.net/) utilizando a biblioteca Pygame. O jogo abarca alguns do elementos principais como:
+Implementação de uma versão simplificada do jogo [Stardew Valley](https://www.stardewvalley.net/) utilizando a biblioteca [Pygame](http://www.pygame.org). O jogo abarca alguns do elementos principais como:
 
 - Uso de ferramentas
-- Interação do player com elementos do jogo como árvores
+- Interação do player com elementos do jogo como árvores e plantas
 - Compra e venda de itens
 - Passagem de tempo e mudanças no clima
 - Inventório
