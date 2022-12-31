@@ -1,3 +1,5 @@
+from random import random
+
 import pygame
 from pytmx.util_pygame import load_pygame
 
@@ -19,12 +21,16 @@ class Level:
 
     def __init__(self) -> None:
         self.display_surface = pygame.display.get_surface()
-
         self.all_sprites = CameraGroup()
+
         self.collision_sprites = pygame.sprite.Group()
         self.tree_sprites = pygame.sprite.Group()
         self.interaction_sprites = pygame.sprite.Group()
-        self.soil_layer = SoilLayer(self.all_sprites)
+
+        self.rain = Rain(self.all_sprites)
+        self.raining = bool(random() <= RAIN_PROBABILITY)
+
+        self.soil_layer = SoilLayer(self.all_sprites, self.raining)
 
         self.MAP_LAYERS = MAP_LAYERS
 
@@ -32,9 +38,6 @@ class Level:
 
         self.overlay = Overlay(self.player)
         self.transition = Transition(self.reset, self.player)
-
-        self.rain = Rain(self.all_sprites)
-        self.raining = True
 
     def setup(self):
         tmx_data = load_pygame(f"{BASE_APP_PATH}/data/map.tmx")
@@ -118,7 +121,13 @@ class Level:
         self.player.item_inventory[item] += amount
 
     def reset(self):
+        self.raining = bool(random() <= RAIN_PROBABILITY)
+
         self.soil_layer.remove_water()
+        self.soil_layer.raining = self.raining
+
+        if self.raining:
+            self.soil_layer.water_all()
 
         for tree in self.tree_sprites.sprites():
             for apple in tree.apple_sprites.sprites():
