@@ -109,6 +109,8 @@ class Level:
         self.player.item_inventory[item] += amount
 
     def reset(self):
+        self.soil_layer.remove_water()
+
         for tree in self.tree_sprites.sprites():
             for apple in tree.apple_sprites.sprites():
                 apple.kill()
