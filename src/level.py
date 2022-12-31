@@ -5,7 +5,7 @@ from src.config import *
 from src.core.utils import *
 from src.components.player import Player
 from src.components.overlay import Overlay
-from src.map import GenericSprite, Interaction, MAP_LAYERS
+from src.map import GenericSprite, Interaction, SoilLayer, MAP_LAYERS
 from src.core import Transition
 
 
@@ -18,6 +18,7 @@ class Level:
         self.collision_sprites = pygame.sprite.Group()
         self.tree_sprites = pygame.sprite.Group()
         self.interaction_sprites = pygame.sprite.Group()
+        self.soil_layer = SoilLayer(self.all_sprites)
 
         self.MAP_LAYERS = MAP_LAYERS
 
@@ -85,6 +86,7 @@ class Level:
                     collision_sprites=self.collision_sprites,
                     tree_sprites=self.tree_sprites,
                     interaction_sprites=self.interaction_sprites,
+                    soil_layer=self.soil_layer,
                 )
 
             if obj.name == "Bed":
