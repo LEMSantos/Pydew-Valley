@@ -11,6 +11,32 @@ from src.core.utils import import_folder
 from .generic_sprite import GenericSprite
 
 
+class Sky:
+
+    def __init__(self):
+        self.display_surface = pygame.display.get_surface()
+        self.full_surf = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
+
+        self.color = [255, 255, 255]
+        self.end_color = (38, 101, 189)
+        self.day_speed = DAY_TRANSITION_SPEED
+
+    def reset_sky(self):
+        self.color = [255, 255, 255]
+
+    def display(self, dt):
+        for index, value in enumerate(self.end_color):
+            if self.color[index] > value:
+                self.color[index] -= self.day_speed * dt
+
+        self.full_surf.fill(self.color)
+        self.display_surface.blit(
+            self.full_surf,
+            (0, 0),
+            special_flags=pygame.BLEND_RGBA_MULT,
+        )
+
+
 class Drop(GenericSprite):
 
     def __init__(self,
