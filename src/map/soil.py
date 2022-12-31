@@ -44,10 +44,12 @@ class WaterTile(GenericSprite):
 
 class SoilLayer:
 
-    def __init__(self, all_sprites: pygame.sprite.Group) -> None:
+    def __init__(self, all_sprites: pygame.sprite.Group, raining: bool) -> None:
         self.all_sprites = all_sprites
         self.soil_sprites = pygame.sprite.Group()
         self.water_sprites = pygame.sprite.Group()
+
+        self.raining = raining
 
         self.water_surfs = import_folder(f"{BASE_APP_PATH}/graphics/soil_water")
         self.soil_surfs = import_folder(
@@ -79,23 +81,45 @@ class SoilLayer:
 
             self.hit_rects.append(rect)
 
-    def __do_action(self, point, previous_action, new_action):
+    def get_hit(self, point):
         for rect in self.hit_rects:
             if rect.collidepoint(point):
                 x, y = rect.x // TILE_SIZE, rect.y // TILE_SIZE
 
                 if (
-                    previous_action in self.farmable_grid[(x, y)]
-                    and new_action not in self.farmable_grid[(x, y)]
+                    "F" in self.farmable_grid[(x, y)]
+                    and "X" not in self.farmable_grid[(x, y)]
                 ):
-                    self.farmable_grid[(x, y)].append(new_action)
+                    self.farmable_grid[(x, y)].append("X")
                     self.create_soil_tiles()
 
-    def get_hit(self, point):
-        self.__do_action(point, "F", "X")
+                    if self.raining:
+                        self.water_all()
 
     def water(self, point):
-        self.__do_action(point, "X", "W")
+        for rect in self.hit_rects:
+            if rect.collidepoint(point):
+                x, y = rect.x // TILE_SIZE, rect.y // TILE_SIZE
+                self.farmable_grid[(x, y)].append("W")
+
+                WaterTile(
+                    position=(x * TILE_SIZE, y * TILE_SIZE),
+                    surface=choice(self.water_surfs),
+                    groups=[self.all_sprites, self.water_sprites],
+                )
+
+    def water_all(self):
+        for (index_col, index_row), cell in list(self.farmable_grid.items()):
+            x, y = index_col * TILE_SIZE, index_row * TILE_SIZE
+
+            if "X" in cell and "W" not in cell:
+                cell.append("W")
+
+                WaterTile(
+                    position=(x, y),
+                    surface=choice(self.water_surfs),
+                    groups=[self.all_sprites, self.water_sprites],
+                )
 
     def create_soil_tiles(self):
         for soil in self.soil_sprites.sprites():
@@ -132,19 +156,7 @@ class SoilLayer:
                     groups=[self.all_sprites, self.soil_sprites],
                 )
 
-            if "W" in cell and not self.watery_soils[(x, y)]:
-                WaterTile(
-                    position=position,
-                    surface=choice(self.water_surfs),
-                    groups=[self.all_sprites, self.water_sprites],
-                )
-
-                self.watery_soils[(x, y)] = True
-
     def remove_water(self):
-        for key in list(self.watery_soils.keys()):
-            del self.watery_soils[key]
-
         for water in self.water_sprites.sprites():
             water.kill()
 
