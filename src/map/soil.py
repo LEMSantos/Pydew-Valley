@@ -81,7 +81,7 @@ class Plant(pygame.sprite.Sprite):
 
                 # self.add()
 
-            if self.age > self.max_age:
+            if self.age >= self.max_age:
                 self.age = self.max_age
                 self.harvestable = True
 
