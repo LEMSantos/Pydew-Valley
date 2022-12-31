@@ -30,7 +30,11 @@ class Level:
         self.rain = Rain(self.all_sprites)
         self.raining = bool(random() <= RAIN_PROBABILITY)
 
-        self.soil_layer = SoilLayer(self.all_sprites, self.raining)
+        self.soil_layer = SoilLayer(
+            self.all_sprites,
+            self.collision_sprites,
+            self.raining,
+        )
 
         self.MAP_LAYERS = MAP_LAYERS
 
@@ -121,6 +125,8 @@ class Level:
         self.player.item_inventory[item] += amount
 
     def reset(self):
+        self.soil_layer.update_plants()
+
         self.raining = bool(random() <= RAIN_PROBABILITY)
 
         self.soil_layer.remove_water()
