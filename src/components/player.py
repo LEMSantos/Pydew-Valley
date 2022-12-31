@@ -1,6 +1,6 @@
 import os
 from collections import defaultdict, namedtuple
-from typing import Tuple
+from typing import Callable, Tuple
 from itertools import cycle
 
 import pygame
@@ -24,7 +24,8 @@ class Player(pygame.sprite.Sprite):
                  collision_sprites: pygame.sprite.Group,
                  tree_sprites: pygame.sprite.Group,
                  interaction_sprites: pygame.sprite.Group,
-                 soil_layer: SoilLayer) -> None:
+                 soil_layer: SoilLayer,
+                 toggle_shop: Callable) -> None:
 
         super().__init__(group)
 
@@ -66,8 +67,16 @@ class Player(pygame.sprite.Sprite):
             "tomato": 0,
         }
 
+        self.seed_inventory = {
+            "corn": 5,
+            "tomato": 5,
+        }
+
+        self.money = 200.0
+
         self.tree_sprites = tree_sprites
         self.interaction_sprites = interaction_sprites
+        self.toggle_shop = toggle_shop
 
         self.soil_layer = soil_layer
 
@@ -223,7 +232,9 @@ class Player(pygame.sprite.Sprite):
         ]
 
     def use_seed(self):
-        self.soil_layer.plant_seed(self.target_pos, self.selected_seed)
+        if self.seed_inventory[self.selected_seed] > 0:
+            self.soil_layer.plant_seed(self.target_pos, self.selected_seed)
+            self.seed_inventory[self.selected_seed] -= 1
 
     def update(self, dt: int) -> None:
         self.input()
@@ -239,4 +250,4 @@ class Player(pygame.sprite.Sprite):
         self.sleep = True
 
     def interact_with_trader(self):
-        pass
+        self.toggle_shop()
