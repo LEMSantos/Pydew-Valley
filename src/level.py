@@ -6,6 +6,7 @@ from pytmx.util_pygame import load_pygame
 from src.config import *
 from src.core.utils import *
 from src.core import Transition
+from src.components.menu import Menu
 from src.core.particle import Particle
 from src.components.player import Player
 from src.components.overlay import Overlay
@@ -45,6 +46,9 @@ class Level:
 
         self.overlay = Overlay(self.player)
         self.transition = Transition(self.reset, self.player)
+
+        self.menu = Menu(self.player, self.toggle_shop)
+        self.shop_active = False
 
     def setup(self):
         tmx_data = load_pygame(f"{BASE_APP_PATH}/data/map.tmx")
@@ -106,9 +110,10 @@ class Level:
                     tree_sprites=self.tree_sprites,
                     interaction_sprites=self.interaction_sprites,
                     soil_layer=self.soil_layer,
+                    toggle_shop=self.toggle_shop,
                 )
 
-            if obj.name == "Bed":
+            if obj.name in ["Bed", "Trader"]:
                 Interaction(
                     position=(obj.x, obj.y),
                     size=(obj.width, obj.height),
@@ -126,6 +131,9 @@ class Level:
 
     def player_add(self, item: str, amount: int=1):
         self.player.item_inventory[item] += amount
+
+    def toggle_shop(self):
+        self.shop_active = not self.shop_active
 
     def reset(self):
         self.soil_layer.update_plants()
@@ -167,14 +175,17 @@ class Level:
 
     def run(self, dt: int) -> None:
         self.display_surface.fill("black")
-
-        self.all_sprites.update(dt)
         self.all_sprites.custom_draw(self.player)
-        self.plant_collision()
+
+        if self.shop_active:
+            self.menu.update()
+        else:
+            self.all_sprites.update(dt)
+            self.plant_collision()
 
         self.overlay.display()
 
-        if self.raining:
+        if self.raining and not self.shop_active:
             self.rain.update()
 
         self.sky.display(dt)
