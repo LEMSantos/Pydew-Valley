@@ -3,6 +3,7 @@ from src.map.wild_flower import WildFlower
 from src.map.water import Water
 from src.map.tree import Tree
 from src.map.interaction import Interaction
+from src.map.soil import SoilLayer
 from src.map.map_layers import MAP_LAYERS
 
 __all__ = (
@@ -10,5 +11,6 @@ __all__ = (
     "WildFlower",
     "Water",
     "Tree",
-    "Interaction"
+    "Interaction",
+    "SoilLayer",
 )
