@@ -3,10 +3,16 @@ from pytmx.util_pygame import load_pygame
 
 from src.config import *
 from src.core.utils import *
+from src.core import Transition
 from src.components.player import Player
 from src.components.overlay import Overlay
-from src.map import GenericSprite, Interaction, SoilLayer, MAP_LAYERS
-from src.core import Transition
+from src.map import (
+    GenericSprite,
+    Interaction,
+    SoilLayer,
+    Rain,
+    MAP_LAYERS,
+)
 
 
 class Level:
@@ -26,6 +32,9 @@ class Level:
 
         self.overlay = Overlay(self.player)
         self.transition = Transition(self.reset, self.player)
+
+        self.rain = Rain(self.all_sprites)
+        self.raining = True
 
     def setup(self):
         tmx_data = load_pygame(f"{BASE_APP_PATH}/data/map.tmx")
@@ -124,6 +133,9 @@ class Level:
         self.all_sprites.custom_draw(self.player)
 
         self.overlay.display()
+
+        if self.raining:
+            self.rain.update()
 
         if self.player.sleep:
             self.transition.play()
