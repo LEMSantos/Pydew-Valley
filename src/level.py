@@ -6,6 +6,7 @@ from pytmx.util_pygame import load_pygame
 from src.config import *
 from src.core.utils import *
 from src.core import Transition
+from src.core.particle import Particle
 from src.components.player import Player
 from src.components.overlay import Overlay
 from src.map import (
@@ -141,11 +142,31 @@ class Level:
 
             tree.create_fruit()
 
+    def plant_collision(self):
+        if self.soil_layer.plant_sprites:
+            for plant in self.soil_layer.plant_sprites.sprites():
+                if plant.harvestable and plant.rect.colliderect(self.player.hitbox):
+                    self.player_add(plant.plant_type, 1)
+
+                    plant.kill()
+
+                    Particle(
+                        position=plant.rect.topleft,
+                        surface=plant.image,
+                        groups=[self.all_sprites],
+                        z=LAYERS["main"],
+                    )
+
+                    x = plant.rect.centerx // TILE_SIZE
+                    y = plant.rect.centery // TILE_SIZE
+                    self.soil_layer.farmable_grid[(x, y)].remove("P")
+
     def run(self, dt: int) -> None:
         self.display_surface.fill("black")
 
         self.all_sprites.update(dt)
         self.all_sprites.custom_draw(self.player)
+        self.plant_collision()
 
         self.overlay.display()
 
@@ -154,6 +175,7 @@ class Level:
 
         if self.player.sleep:
             self.transition.play()
+
 
 class CameraGroup(pygame.sprite.Group):
 
