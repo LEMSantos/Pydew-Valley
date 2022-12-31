@@ -56,3 +56,5 @@ PURCHASE_PRICES = {
     "corn": 4,
     "tomato": 5,
 }
+
+RAIN_PROBABILITY = 0.3
