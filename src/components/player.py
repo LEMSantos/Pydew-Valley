@@ -8,6 +8,7 @@ import pygame
 from src.config import *
 from src.core.utils import import_folder
 from src.core.timer import Timer
+from src.map.soil import SoilLayer
 
 UseAction = namedtuple("UseAction", ["key", "timer"])
 SwitchAction = namedtuple("SwitchAction", ["key", "timer", "variable", "options"])
@@ -22,7 +23,8 @@ class Player(pygame.sprite.Sprite):
                  group: pygame.sprite.Group,
                  collision_sprites: pygame.sprite.Group,
                  tree_sprites: pygame.sprite.Group,
-                 interaction_sprites: pygame.sprite.Group) -> None:
+                 interaction_sprites: pygame.sprite.Group,
+                 soil_layer: SoilLayer) -> None:
 
         super().__init__(group)
 
@@ -66,6 +68,8 @@ class Player(pygame.sprite.Sprite):
 
         self.tree_sprites = tree_sprites
         self.interaction_sprites = interaction_sprites
+
+        self.soil_layer = soil_layer
 
         self.sleep = False
 
@@ -203,7 +207,7 @@ class Player(pygame.sprite.Sprite):
 
     def use_tool(self):
         if self.selected_tool == "hoe":
-            pass
+            self.soil_layer.get_hit(self.target_pos)
 
         if self.selected_tool == "axe":
             for tree in self.tree_sprites.sprites():
