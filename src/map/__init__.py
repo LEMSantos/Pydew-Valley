@@ -5,6 +5,7 @@ from src.map.tree import Tree
 from src.map.interaction import Interaction
 from src.map.soil import SoilLayer
 from src.map.sky import Rain
+from src.map.sky import Sky
 from src.map.map_layers import MAP_LAYERS
 
 __all__ = (
@@ -15,4 +16,5 @@ __all__ = (
     "Interaction",
     "SoilLayer",
     "Rain",
+    "Sky",
 )
