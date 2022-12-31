@@ -223,7 +223,7 @@ class Player(pygame.sprite.Sprite):
         ]
 
     def use_seed(self):
-        pass
+        self.soil_layer.plant_seed(self.target_pos, self.selected_seed)
 
     def update(self, dt: int) -> None:
         self.input()
