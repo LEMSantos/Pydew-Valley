@@ -14,6 +14,7 @@ from src.map import (
     Interaction,
     SoilLayer,
     Rain,
+    Sky,
     MAP_LAYERS,
 )
 
@@ -28,6 +29,7 @@ class Level:
         self.tree_sprites = pygame.sprite.Group()
         self.interaction_sprites = pygame.sprite.Group()
 
+        self.sky = Sky()
         self.rain = Rain(self.all_sprites)
         self.raining = bool(random() <= RAIN_PROBABILITY)
 
@@ -136,6 +138,8 @@ class Level:
         if self.raining:
             self.soil_layer.water_all()
 
+        self.sky.reset_sky()
+
         for tree in self.tree_sprites.sprites():
             for apple in tree.apple_sprites.sprites():
                 apple.kill()
@@ -172,6 +176,8 @@ class Level:
 
         if self.raining:
             self.rain.update()
+
+        self.sky.display(dt)
 
         if self.player.sleep:
             self.transition.play()
