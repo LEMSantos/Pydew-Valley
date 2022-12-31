@@ -58,4 +58,26 @@ PURCHASE_PRICES = {
 }
 
 RAIN_PROBABILITY = 0.3
-DAY_TRANSITION_SPEED = 1 # quanto maior, mais rápido anoitece
+
+MENU_OPTIONS = {
+    "wood": {
+        "name": "Madeira",
+        "sell": True,
+        "buy": False,
+    },
+    "apple": {
+        "name": "Maçã",
+        "sell": True,
+        "buy": False,
+    },
+    "corn": {
+        "name": "Milho",
+        "sell": True,
+        "buy": True,
+    },
+    "tomato": {
+        "name": "Tomate",
+        "sell": True,
+        "buy": True,
+    },
+}
