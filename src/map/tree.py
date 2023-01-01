@@ -29,8 +29,6 @@ class Tree(GenericSprite):
             f"{BASE_APP_PATH}/graphics/stumps/{name.lower()}.png"
         ).convert_alpha()
 
-        self.invulnerable_timer = Timer(200)
-
         self.apple_surf = pygame.image.load(f"{BASE_APP_PATH}/graphics/fruit/apple.png")
         self.apple_position = APPLE_POS[name]
         self.apple_sprites = pygame.sprite.Group()
@@ -39,8 +37,13 @@ class Tree(GenericSprite):
 
         self.player_add = player_add
 
+        self.axe_sound = pygame.mixer.Sound(f"{BASE_APP_PATH}/audio/axe.mp3")
+        self.axe_sound.set_volume(0.1)
+
     def damage(self):
         self.health -= 1
+
+        self.axe_sound.play()
 
         apple_sprites = self.apple_sprites.sprites()
 
