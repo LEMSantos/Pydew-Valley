@@ -58,6 +58,7 @@ PURCHASE_PRICES = {
 }
 
 RAIN_PROBABILITY = 0.3
+DAY_TRANSITION_SPEED = 0.1 # quanto maior, mais rápido anoitece
 
 MENU_OPTIONS = {
     "wood": {
