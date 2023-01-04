@@ -44,8 +44,7 @@ Assets e passo a passo - [Creating a Stardew Valley inspired game in Python](htt
 Demonstração
 ------------
 
-
-
+https://user-images.githubusercontent.com/23699861/210184532-758563a8-83d7-4d05-94bb-a94cf43f0a4a.mp4
 
 [pygame]: http://www.pygame.org
 [pipenv]: https://pipenv.readthedocs.io/en/latest/
